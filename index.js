@@ -3,9 +3,27 @@ const path = require('path')
 const mkdirp = require('mkdirp')
 const SCSS = require('node-sass')
 
-module.exports = function scss(args) {
-    const options = args.options
-    Array.isArray(options) ? options.forEach(compile) : compile(options)
+module.exports = function scss(ox) {
+
+    const defaults = {
+        files: [{
+            input: './src/app.scss',
+            output: './build/app.css',
+            style: 'expanded',
+            map: true
+        }]
+    }
+
+    let options = ox.options || {}
+
+    // Assign defaults if they don't exist
+    for(const [key, value] of Object.entries(defaults)) {
+        if(options[key] === undefined) {
+            options[key] = value
+        } 
+    }
+
+    options.files.forEach(compile)
 
     function compile(options) {
         const compiled  = options.output.split('/').pop()
@@ -14,8 +32,16 @@ module.exports = function scss(args) {
         const exists = fs.existsSync(output)
         let result = null
 
+        if(!fs.existsSync(options.input)) {
+            ox._log(`${options.input} didn't exist, we are creating it for you.`)
+            const inputPath = path.dirname(options.input)
+            const filename = options.input.split('/').pop()
+            mkdirp.sync(inputPath)
+            fs.writeFileSync(`${inputPath}/${filename}`,'Generated using ox-task-scss.')
+        }
+
         if(!exists) {
-            args._log(`${output} didn't exist, creating it for you.`)
+            ox._log(`${output} didn't exist, creating it for you.`)
             mkdirp.sync(output)
         }
 
@@ -29,14 +55,14 @@ module.exports = function scss(args) {
                 sourcemapEmbed: options.map || true
             })
         } catch (e) {
-            args._log(e.formatted)
+            ox._log(e.formatted)
         }
 
         try {
             fs.writeFileSync(`${output}/${compiled}`, result.css)
-            args._log(`${compiled} compiled.`, 1)
+            ox._log(`${compiled} compiled.`, 1)
         } catch(e) {
-            args._log(e.formatted)
+            ox._log(e.formatted)
         }
     }
 }
