@@ -2,5 +2,23 @@
   "dependencies": {
     "mkdirp": "^1.0.4",
     "node-sass": "^6.0.1"
-  }
+  },
+  "name": "@oxidental/ox-task-scss",
+  "description": "ox-task-scss is a task that compiles scss using node-sass under the hood.",
+  "version": "0.0.5",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielTate/ox-task-scss.git"
+  },
+  "author": "Daniel Tate",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DanielTate/ox-task-scss/issues"
+  },
+  "homepage": "https://github.com/DanielTate/ox-task-scss#readme"
 }
