@@ -8,12 +8,14 @@ ox._add(scss)
 
 ox.scss({
     log: true,
-    watch: 'src/app.scss',
-    options: [{
-        input: 'src/app.scss',
-        output: 'src/build/app.css',
-        style: 'expanded',
-        map: true
-    }]
+    watch: './src/styles/**',
+    options: {
+        files: [{
+            input: './src/styles/app.scss',
+            output: './build/css/app.css',
+            style: 'expanded',
+            map: true
+        }]
+    }
 })
 ```

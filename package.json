@@ -5,7 +5,7 @@
   },
   "name": "@oxidental/ox-task-scss",
   "description": "ox-task-scss is a task that compiles scss using node-sass under the hood.",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
