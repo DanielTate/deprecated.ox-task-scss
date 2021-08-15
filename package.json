@@ -1,15 +1,21 @@
 {
+  "engines": {
+    "node": "16.4.0"
+  },
   "dependencies": {
     "mkdirp": "^1.0.4",
-    "node-sass": "^6.0.1"
+    "sass": "^1.37.5"
   },
   "name": "@oxidental/ox-task-scss",
   "description": "ox-task-scss is a task that compiles scss using node-sass under the hood.",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "@oxidental/ox": "^0.0.6",
+    "jest": "^27.0.6"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",

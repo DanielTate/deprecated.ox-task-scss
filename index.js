@@ -1,68 +1,68 @@
 const fs = require('fs')
-const path = require('path')
 const mkdirp = require('mkdirp')
-const SCSS = require('node-sass')
+const sass = require('sass')
 
 module.exports = function scss(ox) {
 
+    function getPath(path) {
+        const namepath = path.split('/')
+        const filename = namepath.pop()
+        const filepath = [...__dirname.split('/'), ...namepath].join('/')
+        const fullpath = `${filepath}/${filename}`
+        return {
+            namepath,
+            filename,
+            filepath,
+            fullpath,
+        }
+    }
+
+    function compile(options) {
+        const input = getPath(options.file)
+        const output = getPath(options.outFile)
+
+        if(!fs.existsSync(input.filepath)) {
+            ox._log(`${input.fullpath} didn't exist, it's being created it for you.`)
+            mkdirp.sync(input.filepath)
+            fs.writeFileSync(`${input.fullpath}`,'// Generated using ox-task-scss.')
+        }
+
+        if(!fs.existsSync(output.filepath)) {
+            ox._log(`${output.filepath} didn't exist, it's being created for you.`)
+            mkdirp.sync(output.filepath)
+        }
+
+        try {
+            const result = sass.renderSync(options)
+            fs.writeFileSync(`${output.fullpath}`, result.css)
+            ox._log(`${output.filename} compiled.`)
+        } catch(e) {
+            ox._log(e.formatted || e.message)
+        }
+    }
+
+    function hydrate(options = {}, defaults) {
+        for(const [key, value] of Object.entries(defaults)) {
+            if(options[key] === undefined) {
+                options[key] = value
+            } 
+        }
+        return options
+    }
+
     const defaults = {
         files: [{
-            input: './src/app.scss',
-            output: './build/app.css',
-            style: 'expanded',
-            map: true
+            file: 'src/app.scss',
+            indentWidth: '4',
+            omitSourceMapUrl: 'true',
+            outFile: 'build/app.css',
+            sourceMapContents: true,
+            sourceMapEmbed: true,
+            sourceMap: true
         }]
     }
 
-    let options = ox.options || {}
-
-    // Assign defaults if they don't exist
-    for(const [key, value] of Object.entries(defaults)) {
-        if(options[key] === undefined) {
-            options[key] = value
-        } 
-    }
+    const options = hydrate(ox.options, defaults)
 
     options.files.forEach(compile)
-
-    function compile(options) {
-        const compiled  = options.output.split('/').pop()
-        const output = path.dirname(options.output)
-        const dest = `${output}/${compiled}`
-        const exists = fs.existsSync(output)
-        let result = null
-
-        if(!fs.existsSync(options.input)) {
-            ox._log(`${options.input} didn't exist, we are creating it for you.`)
-            const inputPath = path.dirname(options.input)
-            const filename = options.input.split('/').pop()
-            mkdirp.sync(inputPath)
-            fs.writeFileSync(`${inputPath}/${filename}`,'Generated using ox-task-scss.')
-        }
-
-        if(!exists) {
-            ox._log(`${output} didn't exist, creating it for you.`)
-            mkdirp.sync(output)
-        }
-
-        try {
-            result = SCSS.renderSync({
-                file: options.input,
-                dest,
-                outputStyle: options.style || 'compressed',
-                sourceMap: options.map || true,
-                sourceMapContents: options.map || true,
-                sourcemapEmbed: options.map || true
-            })
-        } catch (e) {
-            ox._log(e.formatted)
-        }
-
-        try {
-            fs.writeFileSync(`${output}/${compiled}`, result.css)
-            ox._log(`${compiled} compiled.`, 1)
-        } catch(e) {
-            ox._log(e.formatted)
-        }
-    }
 }
