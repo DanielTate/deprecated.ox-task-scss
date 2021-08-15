@@ -7,7 +7,7 @@ module.exports = function scss(ox) {
     function getPath(path) {
         const namepath = path.split('/')
         const filename = namepath.pop()
-        const filepath = [...__dirname.split('/'), ...namepath].join('/')
+        const filepath = [...process.cwd().split('/'), ...namepath].join('/')
         const fullpath = `${filepath}/${filename}`
         return {
             namepath,
@@ -21,7 +21,7 @@ module.exports = function scss(ox) {
         const input = getPath(options.file)
         const output = getPath(options.outFile)
 
-        if(!fs.existsSync(input.filepath)) {
+        if(!fs.existsSync(input.fullpath)) {
             ox._log(`${input.fullpath} didn't exist, it's being created it for you.`)
             mkdirp.sync(input.filepath)
             fs.writeFileSync(`${input.fullpath}`,'// Generated using ox-task-scss.')
