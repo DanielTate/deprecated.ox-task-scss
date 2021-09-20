@@ -8,7 +8,7 @@
   },
   "name": "@oxidental/ox-task-scss",
   "description": "ox-task-scss is a task that compiles scss using dart-sass under the hood.",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "index.js",
   "devDependencies": {
     "@oxidental/ox": "^0.0.6",
