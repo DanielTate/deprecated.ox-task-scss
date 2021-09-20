@@ -11,8 +11,8 @@ ox.scss({
     watch: './src/styles/**',
     options: {
         files: [{
-            input: './src/styles/app.scss',
-            output: './build/css/app.css',
+            file: './src/styles/app.scss',
+            outFile: './build/css/app.css',
             style: 'expanded',
             map: true
         }]
