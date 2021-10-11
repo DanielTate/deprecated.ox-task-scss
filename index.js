@@ -36,6 +36,7 @@ module.exports = function scss(ox) {
             const result = sass.renderSync(options)
             fs.writeFileSync(`${output.fullpath}`, result.css)
             ox._log(`${output.filename} compiled.`)
+			if(options.callback) options.callback(this)
         } catch(e) {
             ox._log(e.formatted || e.message)
         }
@@ -58,7 +59,8 @@ module.exports = function scss(ox) {
             outFile: 'build/app.css',
             sourceMapContents: true,
             sourceMapEmbed: true,
-            sourceMap: true
+            sourceMap: true,
+			callback: false
         }]
     }
 
